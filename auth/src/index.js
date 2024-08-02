@@ -1,12 +1,30 @@
 const express = require("express");
-const { PORT, DB_URI } = require('./config');
+const axios = require("axios");
+const { PORT, DB_URI, API_URL } = require('./config');
 const { connectDb } = require("./helpers/db");
 
 const app = express();
 
 app.get('/test', (req, res) => {
-  res.send("API service is working correctly");
+  res.send("Auth service is working correctly");
 });
+
+app.get('/api/user', (req, res) => {
+  return res.json({
+    id: '123',
+    name: 'John',
+  })
+})
+
+app.get('/api/signin', (req, res) => {
+  axios.get(API_URL + '/user/123')
+    .then((response) => {
+      return res.json({
+        status: 'success',
+        user: response.data,
+      })
+    })
+})
 
 connectDb()
   .on('error', console.log)

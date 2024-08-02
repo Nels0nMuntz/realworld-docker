@@ -4,57 +4,77 @@ services:
   frontend:
     build: ./frontend
     container_name: realworld-docker-frontend
+    restart: unless-stopped
     command: serve -s build -l 3000
+    networks:
+      - realworld-docker-network
+
+  api:
+    build: ./api
+    container_name: realworld-docker-api
+    command: npm run start
     restart: unless-stopped
     ports:
-      - "3000:3000"
-    stdin_open: true
-    tty: true
-    volumes:
-      - ./frontend/src:/usr/src/app/src:rw
+      - "3001:3001"
     environment:
-      - CHOKIDAR_USEPOLLING=true
-
-  # api:
-  #   build: ./api
-  #   container_name: realworld-docker-api
-  #   command: npm run start
-  #   restart: unless-stopped
-  #   ports:
-  #     - "3001:3001"
-  #   environment:
-  #     - PORT=3001
-  #     - HOST=http://realworld-docker.com
-  #     - MONGO_URI=mongodb://api-db:27017/api
-  #   depends_on:
-  #     - api-db
+      - PORT=3001
+      - HOST=http://realworld-docker.com
+      - MONGO_URI=mongodb://api-db:27017/api
+      - AUTH_API_URL=http://auth:3002/api
+    depends_on:
+      - api-db
+    networks:
+      - realworld-docker-network
       
-  # auth:
-  #   build: ./auth
-  #   container_name: realworld-docker-auth
-  #   command: npm run start
-  #   restart: unless-stopped
-  #   ports:
-  #     - "3002:3002"
-  #   environment:
-  #     - PORT=3002
-  #     - HOST=http://realworld-docker.com
-  #     - MONGO_URI=mongodb://auth_db:27017/auth
-  #   depends_on:
-  #     - auth_db
+  auth:
+    build: ./auth
+    container_name: realworld-docker-auth
+    command: npm run start
+    restart: unless-stopped
+    ports:
+      - "3002:3002"
+    environment:
+      - PORT=3002
+      - HOST=http://realworld-docker.com
+      - MONGO_URI=mongodb://auth_db:27017/auth
+      - API_URL=http://api:3001/api
+    depends_on:
+      - auth_db
+    networks:
+      - realworld-docker-network
 
-#   auth_db:
-#     image: mongo:latest
-#     container_name: realworld-docker-auth_db 
-#     volumes:
-#       - mongodb_auth:/data/db
+  auth_db:
+    image: mongo:latest
+    container_name: realworld-docker-auth_db 
+    volumes:
+      - mongodb_auth:/data/db
+    networks:
+      - realworld-docker-network
 
-#   api-db:
-#     image: mongo:latest
-#     container_name: realworld-docker-api-db
-#     volumes:
-#       - mongodb-api:/data/db
+  api-db:
+    image: mongo:latest
+    container_name: realworld-docker-api-db
+    volumes:
+      - mongodb-api:/data/db
+    networks:
+      - realworld-docker-network
 
-# volumes:
-#   mongodb-api:
-#   mongodb_auth:
+  nginx:
+    image: nginx:stable-alpine
+    container_name: realworld-docker-nginx
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx/nginx.conf.prod:/etc/nginx/conf.d/nginx.conf
+    depends_on:
+      - frontend
+    networks:
+      - realworld-docker-network
+
+volumes:
+  mongodb-api:
+  mongodb_auth:
+
+networks:
+  realworld-docker-network:
+    driver: bridge
