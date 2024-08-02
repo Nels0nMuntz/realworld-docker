@@ -1,13 +1,11 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+@import 'simplebar-react/dist/simplebar.min.css';
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
+@import "tailwindcss/base";
+@import "./styles/fonts.css";
+@import "./styles/vars.css";
+@import "./styles/reset.css";
+@import "./styles/base.css";
+
+@import "tailwindcss/components";
+
+@import "tailwindcss/utilities";

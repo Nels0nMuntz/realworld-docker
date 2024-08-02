@@ -4,57 +4,57 @@ services:
   frontend:
     build: ./frontend
     container_name: realworld-docker-frontend
-    command: npm run start
+    command: serve -s build -l 3000
     restart: unless-stopped
     ports:
       - "3000:3000"
     stdin_open: true
     tty: true
     volumes:
-      - ./frontend/src:/usr/src/app/src
+      - ./frontend/src:/usr/src/app/src:rw
     environment:
       - CHOKIDAR_USEPOLLING=true
 
-  api:
-    build: ./api
-    container_name: realworld-docker-api
-    command: npm run start
-    restart: unless-stopped
-    ports:
-      - "3001:3001"
-    environment:
-      - PORT=3001
-      - HOST=http://realworld-docker.com
-      - MONGO_URI=mongodb://api-db:27017/api
-    depends_on:
-      - api-db
+  # api:
+  #   build: ./api
+  #   container_name: realworld-docker-api
+  #   command: npm run start
+  #   restart: unless-stopped
+  #   ports:
+  #     - "3001:3001"
+  #   environment:
+  #     - PORT=3001
+  #     - HOST=http://realworld-docker.com
+  #     - MONGO_URI=mongodb://api-db:27017/api
+  #   depends_on:
+  #     - api-db
       
-  auth:
-    build: ./auth
-    container_name: realworld-docker-auth
-    command: npm run start
-    restart: unless-stopped
-    ports:
-      - "3002:3002"
-    environment:
-      - PORT=3002
-      - HOST=http://realworld-docker.com
-      - MONGO_URI=mongodb://auth_db:27017/auth
-    depends_on:
-      - auth_db
+  # auth:
+  #   build: ./auth
+  #   container_name: realworld-docker-auth
+  #   command: npm run start
+  #   restart: unless-stopped
+  #   ports:
+  #     - "3002:3002"
+  #   environment:
+  #     - PORT=3002
+  #     - HOST=http://realworld-docker.com
+  #     - MONGO_URI=mongodb://auth_db:27017/auth
+  #   depends_on:
+  #     - auth_db
 
-  auth_db:
-    image: mongo:latest
-    container_name: realworld-docker-auth_db 
-    volumes:
-      - mongodb_auth:/data/db
+#   auth_db:
+#     image: mongo:latest
+#     container_name: realworld-docker-auth_db 
+#     volumes:
+#       - mongodb_auth:/data/db
 
-  api-db:
-    image: mongo:latest
-    container_name: realworld-docker-api-db
-    volumes:
-      - mongodb-api:/data/db
+#   api-db:
+#     image: mongo:latest
+#     container_name: realworld-docker-api-db
+#     volumes:
+#       - mongodb-api:/data/db
 
-volumes:
-  mongodb-api:
-  mongodb_auth:
+# volumes:
+#   mongodb-api:
+#   mongodb_auth:

@@ -1,0 +1,16 @@
+@layer base {
+  :root {
+    --off-white: #FEFEFE; 
+    --blue: #4690E2; 
+    --blue-light: #F1F5F8; 
+    --grays: #7F858D;
+    --grays-dark: #343434;
+    --grays-muted: rgba(174, 182, 206, 0.2);
+    --red: #EE3F3E;
+    --snowbank: #E9E9E9; 
+
+    --sidebar-width: 62px;
+    --header-height: 68px;
+    --horizontal-scrollbar-height: 9px;
+  }
+}
