@@ -10,24 +10,39 @@ app.get('/test', (req, res) => {
   res.send("API service is working correctly");
 });
 
-app.get('/api/user', (req, res) => {
+app.get('/users', (req, res) => {
+  return res.json({
+    status: 'success',
+    users: [
+      {
+        id: '1',
+        name: 'Jane'
+      },
+      {
+        id: '2',
+        name: 'Alba'
+      },
+      {
+        id: '3',
+        name: 'Kitty'
+      },
+    ]
+  })
+})
+
+app.get('/user/:id', (req, res) => {
+  console.log('////////////////////');
+  
+  console.log({AUTH_API_URL});
+  
   axios.get(AUTH_API_URL + '/user')
     .then((response) => {
       res.json({
         status: 'success',
-        currentUser: response.data
+        user: response.data
       })
     })
-})
-
-app.get('/api/user/:id', (req, res) => {
-  return res.json({
-    status: 'success',
-    user: {
-      id: '123',
-      name: 'Jacke'
-    }
-  })
+    .catch(err => console.log({err}))
 })
 
 connectDb()

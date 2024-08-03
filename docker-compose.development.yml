@@ -2,15 +2,19 @@ version: '3'
 
 services:
   frontend:
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    # ports:
+    #   - 3000:3000
     command: npm run start
-    ports:
-      - 3000:3000
-    volumes:
-      - ./frontend/src:/usr/src/app/src
     stdin_open: true
     tty: true
     environment:
       - CHOKIDAR_USEPOLLING=true
+      - WDS_SOCKET_PORT=0
+    volumes:
+      - ./frontend/src:/usr/src/app/src
   api:
     command: npm run dev
     volumes:
@@ -20,3 +24,7 @@ services:
     command: npm run dev
     volumes:
       - ./auth/src:/usr/src/app/src
+    
+  nginx:
+    volumes:
+      - ./nginx/nginx.conf.dev:/etc/nginx/conf.d/nginx.conf

@@ -9,14 +9,14 @@ app.get('/test', (req, res) => {
   res.send("Auth service is working correctly");
 });
 
-app.get('/api/user', (req, res) => {
+app.get('/user', (req, res) => {
   return res.json({
     id: '123',
     name: 'John',
   })
 })
 
-app.get('/api/signin', (req, res) => {
+app.get('/signin', (req, res) => {
   axios.get(API_URL + '/user/123')
     .then((response) => {
       return res.json({
